@@ -1,3 +1,5 @@
+import withPWA from '@ducanh2912/next-pwa'
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -11,4 +13,16 @@ const nextConfig = {
   },
 }
 
-export default nextConfig
+const withPWAConfig = withPWA({
+  dest: 'public',
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  reloadOnOnline: true,
+  swcMinify: true,
+  disable: false,
+  workboxOptions: {
+    disableDevLogs: true,
+  },
+})
+
+export default withPWAConfig(nextConfig)
