@@ -77,19 +77,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         expiresAt: new Date(now.getTime() + SESSION_TIMEOUT).toISOString(),
       }
 
-      setSession(updatedSession)
-      localStorage.setItem("bankos_session", JSON.stringify(updatedSession))
+      setSession((currentSession) => {
+        if (currentSession) {
+          const newSession = {
+            ...currentSession,
+            lastActivity: now.toISOString(),
+            expiresAt: new Date(now.getTime() + SESSION_TIMEOUT).toISOString(),
+          }
+          localStorage.setItem("bankos_session", JSON.stringify(newSession))
+          return newSession
+        }
+        return currentSession
+      })
 
-      // Update user with session info
-      const updatedUser = {
-        ...user,
-        lastActivity: now.toISOString(),
-      }
-      setUser(updatedUser)
-      localStorage.setItem("bankos_user", JSON.stringify(updatedUser))
-      document.cookie = `bankos_user=${JSON.stringify(updatedUser)}; path=/; max-age=86400`
+      setUser((currentUser) => {
+        if (currentUser) {
+          const newUser = {
+            ...currentUser,
+            lastActivity: now.toISOString(),
+          }
+          localStorage.setItem("bankos_user", JSON.stringify(newUser))
+          document.cookie = `bankos_user=${JSON.stringify(newUser)}; path=/; max-age=86400`
+          return newUser
+        }
+        return currentUser
+      })
     }
-  }, [session, user])
+  }, []) // Empty deps to prevent re-creation on every render
 
   const isSessionValid = useCallback((sessionData: Session): boolean => {
     const now = new Date()
@@ -133,7 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, ACTIVITY_CHECK_INTERVAL)
 
     return () => clearInterval(interval)
-  }, [session, user, isSessionValid, handleSessionTimeout])
+  }, [session, isSessionValid, handleSessionTimeout])
 
   useEffect(() => {
     const handleActivity = () => {
@@ -167,9 +181,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(userData)
           setSession(sessionData)
           document.cookie = `bankos_user=${storedUser}; path=/; max-age=86400`
-
-          // Update activity on load
-          updateSessionActivity()
         } else {
           // Session expired, clean up
           localStorage.removeItem("bankos_user")
@@ -183,11 +194,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
     setLoading(false)
-  }, [isSessionValid, updateSessionActivity])
+  }, [isSessionValid]) // Remove updateSessionActivity from deps to avoid infinite loop
+
 
   const login = async (username: string, password: string): Promise<boolean> => {
+    console.log("[AuthProvider] Login attempt for:", username)
     // Mock authentication - replace with real API call
     if (username === "admin" && password === "admin123") {
+      console.log("[AuthProvider] Admin login successful")
       const adminUser = {
         id: "1",
         username: "admin",
@@ -208,6 +222,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(userSession)
       return true
     } else if (username === "customer" && password === "customer123") {
+      console.log("[AuthProvider] Customer login successful")
       const customerUser = {
         id: "2",
         username: "customer",
@@ -229,6 +244,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(userSession)
       return true
     }
+    console.log("[AuthProvider] Login failed - invalid credentials")
     return false
   }
 

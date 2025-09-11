@@ -91,7 +91,7 @@ export function AdminLayout({ children, activeModule = "overview" }: AdminLayout
                 <p className="text-xs text-muted-foreground">Admin Portal</p>
               </div>
             </div>
-            <Button variant="ghost" size="sm" className="lg:hidden" onClick={() => setSidebarOpen(false)}>
+            <Button variant="ghost" size="sm" className="lg:hidden cursor-pointer" onClick={() => setSidebarOpen(false)}>
               <X className="w-4 h-4" />
             </Button>
           </div>
@@ -107,7 +107,7 @@ export function AdminLayout({ children, activeModule = "overview" }: AdminLayout
                   <Button
                     variant={isActive ? "default" : "ghost"}
                     className={cn(
-                      "w-full justify-start text-left",
+                      "w-full justify-start text-left cursor-pointer",
                       isActive
                         ? "bg-sidebar-primary text-sidebar-primary-foreground"
                         : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
@@ -147,7 +147,7 @@ export function AdminLayout({ children, activeModule = "overview" }: AdminLayout
         {/* Top bar */}
         <header className="h-16 bg-background border-b border-border flex items-center justify-between px-6">
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" className="lg:hidden" onClick={() => setSidebarOpen(true)}>
+            <Button variant="ghost" size="sm" className="lg:hidden cursor-pointer" onClick={() => setSidebarOpen(true)}>
               <Menu className="w-4 h-4" />
             </Button>
             <div>
@@ -166,12 +166,12 @@ export function AdminLayout({ children, activeModule = "overview" }: AdminLayout
             </Badge>
 
             {/* Search */}
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="cursor-pointer">
               <Search className="w-4 h-4" />
             </Button>
 
             {/* Notifications */}
-            <Button variant="ghost" size="sm" className="relative">
+            <Button variant="ghost" size="sm" className="relative cursor-pointer">
               <Bell className="w-4 h-4" />
               <Badge className="absolute -top-1 -right-1 w-2 h-2 p-0 bg-destructive" />
             </Button>
@@ -179,7 +179,7 @@ export function AdminLayout({ children, activeModule = "overview" }: AdminLayout
             {/* Admin Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src="/placeholder.svg?height=32&width=32" alt={user?.name} />
                     <AvatarFallback>
@@ -199,16 +199,16 @@ export function AdminLayout({ children, activeModule = "overview" }: AdminLayout
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => router.push("/admin/settings")}>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/admin/settings")}>
                   <Settings className="mr-2 h-4 w-4" />
                   Admin Settings
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
+                <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Log out
                 </DropdownMenuItem>

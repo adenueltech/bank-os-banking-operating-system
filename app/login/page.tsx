@@ -2,14 +2,16 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import Link from "next/link"
 import { Building2, Shield, Users } from "lucide-react"
+import { useAuth } from "@/lib/auth"
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")
@@ -17,42 +19,36 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const { login, user } = useAuth()
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError("")
 
-    // Mock authentication - replace with real API call
-    setTimeout(() => {
-      if (username === "admin" && password === "admin123") {
-        localStorage.setItem(
-          "bankos_user",
-          JSON.stringify({
-            id: "1",
-            username: "admin",
-            role: "admin",
-            name: "Bank Administrator",
-          }),
-        )
-        router.push("/admin")
-      } else if (username === "customer" && password === "customer123") {
-        localStorage.setItem(
-          "bankos_user",
-          JSON.stringify({
-            id: "2",
-            username: "customer",
-            role: "customer",
-            name: "John Doe",
-            accountNumber: "1234567890",
-          }),
-        )
-        router.push("/portal")
+    try {
+      const success = await login(username, password)
+      if (success) {
+        // Wait a bit for state to update, then redirect manually
+        setTimeout(() => {
+          if (username === "admin") {
+            console.log("[LoginPage] Redirecting admin to /admin")
+            window.location.href = "/admin"
+          } else if (username === "customer") {
+            console.log("[LoginPage] Redirecting customer to /portal")
+            window.location.href = "/portal"
+          }
+        }, 200)
       } else {
         setError("Invalid username or password")
       }
+    } catch (error) {
+      setError("An error occurred during login")
+      console.error("Login error:", error)
+    } finally {
       setLoading(false)
-    }, 1000)
+    }
   }
 
   return (
@@ -71,8 +67,14 @@ export default function LoginPage() {
 
         {/* Login Form */}
         <Card className="border-0 shadow-xl">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Sign In</CardTitle>
+          <CardHeader className="space-y-1 pb-0">
+            <div className="flex justify-between items-center mb-4">
+              <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                ← Back to Home
+              </Link>
+              <CardTitle className="text-2xl">Sign In</CardTitle>
+              <div className="w-0" /> {/* Spacer for alignment */}
+            </div>
             <CardDescription className="text-center">Enter your credentials to access your account</CardDescription>
           </CardHeader>
           <CardContent>
