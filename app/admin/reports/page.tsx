@@ -50,8 +50,8 @@ interface Report {
 
 export default function ReportsPage() {
   const [searchTerm, setSearchTerm] = useState("")
-  const [typeFilter, setTypeFilter] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
+  const [typeFilter, setTypeFilter] = useState("all")
+  const [statusFilter, setStatusFilter] = useState("all")
   const [openGenerateModal, setOpenGenerateModal] = useState(false)
   const [selectedReport, setSelectedReport] = useState<Report | null>(null)
   const [selectedReports, setSelectedReports] = useState(new Set<string>())
@@ -150,8 +150,8 @@ export default function ReportsPage() {
     return allReports.filter((report) => {
       const matchesSearch = report.id.includes(searchTerm) ||
                             report.type.includes(searchTerm.toLowerCase())
-      const matchesType = typeFilter === "" || report.type === typeFilter
-      const matchesStatus = statusFilter === "" || report.status === statusFilter
+      const matchesType = typeFilter === "all" || typeFilter === "" || report.type === typeFilter
+      const matchesStatus = statusFilter === "all" || statusFilter === "" || report.status === statusFilter
       return matchesSearch && matchesType && matchesStatus
     })
   }, [searchTerm, typeFilter, statusFilter, allReports])
@@ -278,7 +278,7 @@ export default function ReportsPage() {
                 <SelectValue placeholder="Filter by type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Types</SelectItem>
+                <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="daily">Daily</SelectItem>
                 <SelectItem value="monthly">Monthly</SelectItem>
                 <SelectItem value="annual">Annual</SelectItem>
@@ -290,7 +290,7 @@ export default function ReportsPage() {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Status</SelectItem>
+                <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="generated">Generated</SelectItem>
                 <SelectItem value="generating">Generating</SelectItem>
                 <SelectItem value="failed">Failed</SelectItem>

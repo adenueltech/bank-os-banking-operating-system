@@ -51,8 +51,8 @@ interface Transaction {
 
 export default function PaymentsPage() {
   const [searchTerm, setSearchTerm] = React.useState("")
-  const [typeFilter, setTypeFilter] = React.useState("")
-  const [statusFilter, setStatusFilter] = React.useState("")
+  const [typeFilter, setTypeFilter] = React.useState("all")
+  const [statusFilter, setStatusFilter] = React.useState("all")
   const [openModal, setOpenModal] = React.useState(false)
   const [selectedTransaction, setSelectedTransaction] = React.useState<Transaction | null>(null)
   const [selectedTransactions, setSelectedTransactions] = React.useState(new Set<string>())
@@ -162,8 +162,8 @@ export default function PaymentsPage() {
       const matchesSearch = txn.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             txn.id.includes(searchTerm) ||
                             txn.reference.includes(searchTerm)
-      const matchesType = typeFilter === "" || txn.type === typeFilter
-      const matchesStatus = statusFilter === "" || txn.status === statusFilter
+      const matchesType = typeFilter === "all" || typeFilter === "" || txn.type === typeFilter
+      const matchesStatus = statusFilter === "all" || statusFilter === "" || txn.status === statusFilter
       return matchesSearch && matchesType && matchesStatus
     })
   }, [searchTerm, typeFilter, statusFilter, allTransactions])
@@ -279,7 +279,7 @@ export default function PaymentsPage() {
                 <SelectValue placeholder="Filter by type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Types</SelectItem>
+                <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="deposit">Deposit</SelectItem>
                 <SelectItem value="withdrawal">Withdrawal</SelectItem>
                 <SelectItem value="transfer">Transfer</SelectItem>
@@ -290,7 +290,7 @@ export default function PaymentsPage() {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Status</SelectItem>
+                <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
                 <SelectItem value="failed">Failed</SelectItem>

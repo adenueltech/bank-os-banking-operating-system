@@ -51,7 +51,7 @@ interface Loan {
 
 export default function LoansPage() {
   const [searchTerm, setSearchTerm] = React.useState("")
-  const [statusFilter, setStatusFilter] = React.useState("")
+  const [statusFilter, setStatusFilter] = React.useState("all")
   const [openModal, setOpenModal] = React.useState(false)
   const [selectedLoan, setSelectedLoan] = React.useState<Loan | null>(null)
   const [selectedLoans, setSelectedLoans] = React.useState(new Set<string>())
@@ -162,7 +162,7 @@ export default function LoansPage() {
       const matchesSearch = loan.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             loan.id.includes(searchTerm) ||
                             loan.amount.includes(searchTerm)
-      const matchesStatus = statusFilter === "" || loan.status === statusFilter
+      const matchesStatus = statusFilter === "all" || statusFilter === "" || loan.status === statusFilter
       return matchesSearch && matchesStatus
     })
   }, [searchTerm, statusFilter, allLoans])
@@ -273,7 +273,7 @@ export default function LoansPage() {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Status</SelectItem>
+                <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="approved">Approved</SelectItem>
                 <SelectItem value="rejected">Rejected</SelectItem>

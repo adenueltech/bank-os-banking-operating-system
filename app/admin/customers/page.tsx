@@ -51,7 +51,7 @@ interface Customer {
 
 export default function CustomersPage(): JSX.Element {
   const [searchTerm, setSearchTerm] = React.useState("")
-  const [statusFilter, setStatusFilter] = React.useState("")
+  const [statusFilter, setStatusFilter] = React.useState("all")
   const [openModal, setOpenModal] = React.useState(false)
   const [selectedCustomer, setSelectedCustomer] = React.useState<Customer | null>(null)
   const [selectedCustomers, setSelectedCustomers] = React.useState(new Set<string>())
@@ -170,7 +170,7 @@ export default function CustomersPage(): JSX.Element {
                             customer.id.includes(searchTerm) ||
                             customer.email.includes(searchTerm) ||
                             customer.phone.includes(searchTerm)
-      const matchesStatus = statusFilter === "" || customer.status === statusFilter
+      const matchesStatus = statusFilter === "all" || statusFilter === "" || customer.status === statusFilter
       return matchesSearch && matchesStatus
     })
   }, [searchTerm, statusFilter, allCustomers])
@@ -276,7 +276,7 @@ export default function CustomersPage(): JSX.Element {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Status</SelectItem>
+                <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>

@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { ArrowUpDown, FileText } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -57,8 +57,13 @@ const adminNavigationItems = [
 
 export function AdminLayout({ children, activeModule = "overview" }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { user, logout } = useAuth()
+  const [mounted, setMounted] = useState(false)
+  const { user, logout, loading } = useAuth()
   const router = useRouter()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleLogout = () => {
     logout()
@@ -127,14 +132,14 @@ export function AdminLayout({ children, activeModule = "overview" }: AdminLayout
               <Avatar className="h-8 w-8">
                 <AvatarImage src="/placeholder.svg?height=32&width=32" alt={user?.name} />
                 <AvatarFallback>
-                  {user?.name
+                  {mounted && !loading ? (user?.name
                     ?.split(" ")
                     .map((n) => n[0])
-                    .join("") || "AD"}
+                    .join("") || "AD") : "AD"}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-sidebar-foreground truncate">{user?.name || "Admin User"}</p>
+                <p className="text-sm font-medium text-sidebar-foreground truncate">{mounted && !loading ? (user?.name || "Admin User") : "Admin User"}</p>
                 <p className="text-xs text-muted-foreground truncate">System Administrator</p>
               </div>
             </div>
@@ -183,10 +188,10 @@ export function AdminLayout({ children, activeModule = "overview" }: AdminLayout
                   <Avatar className="h-8 w-8">
                     <AvatarImage src="/placeholder.svg?height=32&width=32" alt={user?.name} />
                     <AvatarFallback>
-                      {user?.name
+                      {mounted && !loading ? (user?.name
                         ?.split(" ")
                         .map((n) => n[0])
-                        .join("") || "AD"}
+                        .join("") || "AD") : "AD"}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -194,7 +199,7 @@ export function AdminLayout({ children, activeModule = "overview" }: AdminLayout
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user?.name || "Admin User"}</p>
+                    <p className="text-sm font-medium leading-none">{mounted && !loading ? (user?.name || "Admin User") : "Admin User"}</p>
                     <p className="text-xs leading-none text-muted-foreground">System Administrator</p>
                   </div>
                 </DropdownMenuLabel>

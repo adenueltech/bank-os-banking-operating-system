@@ -49,7 +49,7 @@ interface KYCRequest {
 
 export default function KYCPage() {
   const [searchTerm, setSearchTerm] = React.useState("")
-  const [statusFilter, setStatusFilter] = React.useState("")
+  const [statusFilter, setStatusFilter] = React.useState("all")
   const [openModal, setOpenModal] = React.useState(false)
   const [selectedRequest, setSelectedRequest] = React.useState<KYCRequest | null>(null)
   const [selectedRequests, setSelectedRequests] = React.useState(new Set<string>())
@@ -139,7 +139,7 @@ export default function KYCPage() {
     return allRequests.filter((request) => {
       const matchesSearch = request.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             request.id.includes(searchTerm)
-      const matchesStatus = statusFilter === "" || request.verificationStatus === statusFilter
+      const matchesStatus = statusFilter === "all" || statusFilter === "" || request.verificationStatus === statusFilter
       return matchesSearch && matchesStatus
     })
   }, [searchTerm, statusFilter, allRequests])
@@ -259,7 +259,7 @@ export default function KYCPage() {
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Status</SelectItem>
+                <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="approved">Approved</SelectItem>
                 <SelectItem value="rejected">Rejected</SelectItem>

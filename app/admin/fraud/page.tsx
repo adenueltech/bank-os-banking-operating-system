@@ -51,8 +51,8 @@ interface FraudAlert {
 
 export default function FraudDetectionPage() {
   const [searchTerm, setSearchTerm] = React.useState("")
-  const [typeFilter, setTypeFilter] = React.useState("")
-  const [riskFilter, setRiskFilter] = React.useState("")
+  const [typeFilter, setTypeFilter] = React.useState("all")
+  const [riskFilter, setRiskFilter] = React.useState("all")
   const [openModal, setOpenModal] = React.useState(false)
   const [selectedAlert, setSelectedAlert] = React.useState<FraudAlert | null>(null)
   const [selectedAlerts, setSelectedAlerts] = React.useState(new Set<string>())
@@ -158,8 +158,8 @@ export default function FraudDetectionPage() {
       const matchesSearch = alert.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             alert.id.includes(searchTerm) ||
                             alert.type.includes(searchTerm.toLowerCase())
-      const matchesType = typeFilter === "" || alert.type === typeFilter
-      const matchesRisk = riskFilter === "" || alert.riskLevel === riskFilter
+      const matchesType = typeFilter === "all" || typeFilter === "" || alert.type === typeFilter
+      const matchesRisk = riskFilter === "all" || riskFilter === "" || alert.riskLevel === riskFilter
       return matchesSearch && matchesType && matchesRisk
     })
   }, [searchTerm, typeFilter, riskFilter, allAlerts])
@@ -285,7 +285,7 @@ export default function FraudDetectionPage() {
                 <SelectValue placeholder="Filter by type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Types</SelectItem>
+                <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="suspicious_transaction">Suspicious Transaction</SelectItem>
                 <SelectItem value="account_takeover">Account Takeover</SelectItem>
                 <SelectItem value="money_laundering">Money Laundering</SelectItem>
@@ -297,7 +297,7 @@ export default function FraudDetectionPage() {
                 <SelectValue placeholder="Risk level" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Risks</SelectItem>
+                <SelectItem value="all">All Risks</SelectItem>
                 <SelectItem value="low">Low</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
                 <SelectItem value="high">High</SelectItem>
