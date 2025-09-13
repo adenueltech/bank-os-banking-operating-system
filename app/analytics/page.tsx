@@ -1,7 +1,5 @@
-import dynamic from 'next/dynamic'
+"use client"
 
-const AnalyticsHubPage = dynamic(() => import('@/components/analytics-hub'), {
-  ssr: false
-})
+import AnalyticsHubPage from '@/components/analytics-hub'
 
 export default AnalyticsHubPage
